@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://surabaya24jam.netlify.app/</loc>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://surabaya24jam.netlify.app/direktori-merchant</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://surabaya24jam.netlify.app/umkm</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://surabaya24jam.netlify.app/login</loc>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://surabaya24jam.netlify.app/register</loc>
-    <priority>0.3</priority>
-  </url>
+  <url><loc>https://surabaya24jam.netlify.app/</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/peta</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/berita</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/layanan</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/event</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/pasar</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/umkm</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/lowongan</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/emergency</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/wilayah</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/forum</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/beasiswa</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/polling</loc></url>
+  <url><loc>https://surabaya24jam.netlify.app/donasi</loc></url>
 </urlset>
