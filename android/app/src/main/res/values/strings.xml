@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SBY 24 JAM V1</string>
+    <string name="title_activity_main">SBY 24 JAM V1</string>
+    <string name="package_name">com.valma.sby24jam</string>
+    <string name="custom_url_scheme">com.valma.sby24jam</string>
+</resources>

@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+
+  /* Warna utama VALMA — biru sebagai identitas, putih sebagai dasar */
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dbe7fe;
+  --color-brand-200: #bfd7fe;
+  --color-brand-300: #93bbfd;
+  --color-brand-400: #6096fa;
+  --color-brand-500: #3b76f2;
+  --color-brand-600: #2456e0;
+  --color-brand-700: #1d43c2;
+  --color-brand-800: #1c399c;
+  --color-brand-900: #1b327d;
+  --color-brand-950: #131f4d;
+
+  /* Aksen — dipakai seperlunya, bukan warna utama */
+  --color-accent-amber: #f5a524;
+  --color-accent-emerald: #16a34a;
+  --color-accent-rose: #e11d48;
+
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 12px rgba(16, 24, 40, 0.06);
+  --shadow-card-lg: 0 8px 24px rgba(16, 24, 40, 0.10), 0 2px 6px rgba(16, 24, 40, 0.06);
+  --shadow-floating: 0 12px 32px rgba(29, 67, 194, 0.18);
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+    font-family: var(--font-sans);
+  }
+}
+
+/* ==========================================================
+   DESIGN SYSTEM VALMA — komponen dasar yang dipakai berulang.
+   Pakai kelas ini di halaman baru/redesign supaya semua halaman
+   tetap terasa satu aplikasi, bukan gaya yang beda-beda tiap page.
+   (Catatan teknis: setiap kelas ditulis lengkap sendiri-sendiri,
+   TIDAK saling @apply satu sama lain — Tailwind v4 tidak mengizinkan
+   @apply memanggil kelas custom lain, hanya utility bawaan.)
+   ========================================================== */
+@layer components {
+  /* Header aplikasi (dipakai di hampir semua halaman non-Home) */
+  .app-header {
+    @apply sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-100;
+  }
+  .app-header-inner {
+    @apply max-w-2xl mx-auto px-4 py-3.5 flex items-center gap-3;
+  }
+  .app-header-title {
+    @apply text-[15px] font-bold text-gray-900 tracking-tight;
+  }
+  .app-back-btn {
+    @apply w-9 h-9 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0 active:bg-gray-200 transition-colors;
+  }
+
+  /* Kartu dasar */
+  .card {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-[var(--shadow-card)];
+  }
+  .card-interactive {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-[var(--shadow-card)] transition-all duration-150 active:scale-[0.98] active:shadow-none;
+  }
+
+  /* Tombol */
+  .btn-primary {
+    @apply bg-brand-600 text-white font-semibold rounded-xl px-4 py-3 shadow-[var(--shadow-floating)] active:bg-brand-700 disabled:bg-gray-300 disabled:shadow-none transition-colors;
+  }
+  .btn-secondary {
+    @apply bg-brand-50 text-brand-700 font-semibold rounded-xl px-4 py-3 active:bg-brand-100 transition-colors;
+  }
+  .btn-ghost {
+    @apply bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl px-4 py-3 active:bg-gray-50 transition-colors;
+  }
+
+  /* Input form */
+  .input-field {
+    @apply w-full rounded-xl border border-gray-200 bg-white px-3.5 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-shadow;
+  }
+  .field-label {
+    @apply block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5;
+  }
+
+  /* Badge status — masing-masing ditulis lengkap, tidak @apply .badge */
+  .badge-brand {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-brand-50 text-brand-700;
+  }
+  .badge-warn {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700;
+  }
+  .badge-success {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700;
+  }
+  .badge-danger {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700;
+  }
+  .badge-neutral {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600;
+  }
+
+  /* Navigasi bawah (mobile) */
+  .bottom-nav {
+    @apply fixed bottom-0 inset-x-0 z-[1000] bg-white/95 backdrop-blur-md border-t border-gray-100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bottom-nav-inner {
+    @apply max-w-2xl mx-auto grid grid-cols-5;
+  }
+  .bottom-nav-item {
+    @apply flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10px] font-semibold text-gray-400 transition-colors;
+  }
+  .bottom-nav-item.active {
+    @apply text-brand-600;
+  }
+}
+
+/* Premium interaction layer */
+* { box-sizing: border-box; }
+button, a { transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, border-color .15s ease; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(59,118,242,.25); outline-offset: 2px; }
+::selection { background: rgba(59,118,242,.18); }
+.leaflet-container { font-family: var(--font-sans); }
+
+
+/* Mobile-safe viewport & Leaflet layering */
+html, body, #root { min-height: 100%; }
+body { overflow-x: hidden; }
+.leaflet-container { z-index: 0 !important; }
+.leaflet-pane, .leaflet-top, .leaflet-bottom { z-index: 10 !important; }
+.leaflet-control { z-index: 20 !important; }
+.page-with-bottom-nav { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
+
+/* Keep danger red semantic only; ordinary brand actions remain blue. */
+.semantic-danger { color: #be123c; background: #fff1f2; border-color: #ffe4e6; }
+.semantic-warning { color: #a16207; background: #fffbeb; border-color: #fef3c7; }
+
+/* Premium focus/disabled states */
+button:disabled, a[aria-disabled="true"] { cursor: not-allowed; }
+@media (max-width: 640px) {
+  .leaflet-control-zoom { margin-bottom: 4px !important; }
+}

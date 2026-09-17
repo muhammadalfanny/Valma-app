@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749714758300",
+    "project_id": "surabaya-24-jam",
+    "storage_bucket": "surabaya-24-jam.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749714758300:android:8332afa632716545d1ab59",
+        "android_client_info": {
+          "package_name": "com.valma.sby24jam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5PJa0qCdMdYX4Wh9pAic3fwsEws0Awm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

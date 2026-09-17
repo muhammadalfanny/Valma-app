@@ -1,0 +1,3 @@
+/* Kept intentionally small: the main design system lives in index.css. */
+#root { min-height: 100vh; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
