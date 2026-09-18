@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../supabaseClient'
 import LencanaBadge from '../components/LencanaBadge'
+import AvatarUpload from '../components/AvatarUpload'
 
 const SUMBER_PENGAJUAN = [
   { type: 'event', icon: '🎪', label: 'Event', table: 'event', title: (r) => r.judul },
@@ -47,7 +48,7 @@ export default function Profile() {
   const fetchProfileData = async () => {
     const { data, error } = await supabase
       .from('profiles')
-      .select('nama, nomor_id, centang_akurat, lencana_menunggu, lencana_alasan, jumlah_ganti_nama, ganti_nama_sejak')
+      .select('nama, nomor_id, centang_akurat, lencana_menunggu, lencana_alasan, jumlah_ganti_nama, ganti_nama_sejak, avatar_url')
       .eq('id', user.id)
       .single()
 
@@ -246,6 +247,16 @@ export default function Profile() {
 
       {/* Informasi Akun */}
       <main className="p-4 max-w-md mx-auto space-y-4">
+        {user && (
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex justify-center">
+            <AvatarUpload
+              userId={user.id}
+              nama={profileData?.nama}
+              avatarUrl={profileData?.avatar_url}
+              onChange={(url) => setProfileData((prev) => ({ ...prev, avatar_url: url }))}
+            />
+          </div>
+        )}
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
           <h2 className="text-xs font-bold text-gray-400 uppercase mb-2">Informasi Akun</h2>
           <p className="text-sm font-semibold text-gray-800 break-all">{user?.email}</p>
