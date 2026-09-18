@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
@@ -49,6 +49,9 @@ function kompresGambar(file, maksUkuran = 1280, kualitas = 0.7) {
   })
 }
 
+// Durasi maksimal rekaman suara (detik)
+const MAKS_DETIK_REKAM = 60
+
 export default function ReportForm() {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -61,6 +64,17 @@ export default function ReportForm() {
   const [lng, setLng] = useState(null)
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+
+  // --- State untuk voice note ---
+  const [merekam, setMerekam] = useState(false)
+  const [detikRekam, setDetikRekam] = useState(0)
+  const [blobAudio, setBlobAudio] = useState(null)
+  const [urlPreviewAudio, setUrlPreviewAudio] = useState(null)
+
+  const mediaRecorderRef = useRef(null)
+  const audioChunksRef = useRef([])
+  const streamRef = useRef(null)
+  const timerRef = useRef(null)
 
   useEffect(() => {
     // Ambil GPS otomatis saat halaman lapor dibuka
@@ -79,7 +93,82 @@ export default function ReportForm() {
         { enableHighAccuracy: true }
       )
     }
+
+    // Bersihkan mic & timer kalau halaman ditutup saat masih merekam
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop())
+      }
+    }
   }, [])
+
+  // --- Fungsi mulai rekam ---
+  const mulaiRekam = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      streamRef.current = stream
+
+      const recorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = recorder
+      audioChunksRef.current = []
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data)
+      }
+
+      recorder.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+        setBlobAudio(blob)
+        setUrlPreviewAudio(URL.createObjectURL(blob))
+        stream.getTracks().forEach((track) => track.stop())
+        streamRef.current = null
+      }
+
+      recorder.start()
+      setMerekam(true)
+      setDetikRekam(0)
+
+      timerRef.current = setInterval(() => {
+        setDetikRekam((detikSaatIni) => {
+          if (detikSaatIni + 1 >= MAKS_DETIK_REKAM) {
+            hentikanRekam()
+            return MAKS_DETIK_REKAM
+          }
+          return detikSaatIni + 1
+        })
+      }, 1000)
+    } catch (err) {
+      console.error('Gagal akses mikrofon:', err)
+      alert('Tidak bisa mengakses mikrofon. Pastikan izin mikrofon sudah diberikan.')
+    }
+  }
+
+  // --- Fungsi hentikan rekam ---
+  const hentikanRekam = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop()
+    }
+    setMerekam(false)
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+  }
+
+  // --- Hapus rekaman & rekam ulang ---
+  const hapusRekaman = () => {
+    if (urlPreviewAudio) URL.revokeObjectURL(urlPreviewAudio)
+    setBlobAudio(null)
+    setUrlPreviewAudio(null)
+    setDetikRekam(0)
+  }
+
+  const formatDetik = (detik) => {
+    const menit = Math.floor(detik / 60)
+    const sisaDetik = detik % 60
+    return `${menit}:${sisaDetik.toString().padStart(2, '0')}`
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -99,6 +188,7 @@ export default function ReportForm() {
 
     try {
       let fotoUrl = null
+      let audioUrl = null
 
       // 1. Upload foto ke Supabase Storage jika ada file yang dipilih
       if (fileFoto) {
@@ -120,7 +210,24 @@ export default function ReportForm() {
         fotoUrl = publicData.publicUrl
       }
 
-      // 2. Simpan data laporan ke tabel 'reports'
+      // 2. Upload voice note ke Supabase Storage jika ada rekaman
+      if (blobAudio) {
+        const namaFileAudio = `${user.id}/${Date.now()}.webm`
+
+        const { error: uploadAudioError } = await supabase.storage
+          .from('suara-laporan')
+          .upload(namaFileAudio, blobAudio)
+
+        if (uploadAudioError) throw uploadAudioError
+
+        const { data: publicAudioData } = supabase.storage
+          .from('suara-laporan')
+          .getPublicUrl(namaFileAudio)
+
+        audioUrl = publicAudioData.publicUrl
+      }
+
+      // 3. Simpan data laporan ke tabel 'reports'
       const { error: insertError } = await supabase.from('reports').insert([
         {
           user_id: user.id,
@@ -128,6 +235,7 @@ export default function ReportForm() {
           kategori,
           deskripsi,
           foto_url: fotoUrl,
+          audio_url: audioUrl,
           latitude: lat,
           longitude: lng,
           status: 'Menunggu'
@@ -226,6 +334,52 @@ export default function ReportForm() {
                   alt="Preview foto laporan"
                   className="w-full max-h-64 object-cover rounded-lg border border-gray-200"
                 />
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Rekam Suara (Opsional)</label>
+
+            {!urlPreviewAudio && !merekam && (
+              <button
+                type="button"
+                onClick={mulaiRekam}
+                className="w-full flex items-center justify-center gap-2 bg-brand-50 text-brand-700 py-3 rounded-lg font-semibold text-sm border border-brand-200"
+              >
+                🎤 Mulai Rekam Suara
+              </button>
+            )}
+
+            {merekam && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-center justify-between">
+                <span className="text-sm font-semibold text-red-600 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                  Merekam... {formatDetik(detikRekam)} / {formatDetik(MAKS_DETIK_REKAM)}
+                </span>
+                <button
+                  type="button"
+                  onClick={hentikanRekam}
+                  className="text-xs bg-red-600 text-white px-3 py-1.5 rounded font-semibold"
+                >
+                  Selesai
+                </button>
+              </div>
+            )}
+
+            {urlPreviewAudio && !merekam && (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-2">
+                <p className="text-xs font-semibold text-gray-600">Preview rekaman ({formatDetik(detikRekam)}):</p>
+                <audio src={urlPreviewAudio} controls className="w-full" />
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={hapusRekaman}
+                    className="flex-1 text-xs bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold"
+                  >
+                    Hapus & Rekam Ulang
+                  </button>
+                </div>
               </div>
             )}
           </div>

@@ -106,6 +106,20 @@ export default function AdminLowongan() {
     fetchLowongan()
   }
 
+  const toggleVerifikasi = async (item) => {
+    const { error } = await supabase
+      .from('lowongan')
+      .update({ lowongan_terverifikasi: !item.lowongan_terverifikasi })
+      .eq('id', item.id)
+
+    if (error) {
+      alert('Gagal mengubah status verifikasi: ' + error.message)
+      return
+    }
+
+    fetchLowongan()
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
       <header className="bg-brand-600 text-white px-4 py-5 shadow-md">
@@ -224,8 +238,14 @@ export default function AdminLowongan() {
               >
                 <div className="flex justify-between gap-3">
                   <div>
-                    <h2 className="font-bold text-gray-800">
+                    <h2 className="font-bold text-gray-800 flex items-center gap-1">
                       {item.judul}
+                      {item.lowongan_terverifikasi && (
+                        <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0" fill="none">
+                          <circle cx="12" cy="12" r="12" fill="#2563eb" />
+                          <path d="M7 12.5l3 3 7-7" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                        </svg>
+                      )}
                     </h2>
                     <p className="text-sm text-brand-600 font-semibold mt-1">
                       {item.perusahaan}
@@ -266,6 +286,17 @@ export default function AdminLowongan() {
                     Hapus
                   </button>
                 </div>
+
+                <button
+                  onClick={() => toggleVerifikasi(item)}
+                  className={`w-full mt-2 py-2 rounded-lg text-xs font-bold ${
+                    item.lowongan_terverifikasi
+                      ? 'bg-gray-100 text-gray-600'
+                      : 'bg-brand-50 text-brand-700'
+                  }`}
+                >
+                  {item.lowongan_terverifikasi ? 'Cabut Verifikasi ✓' : 'Verifikasi Lowongan ✓'}
+                </button>
               </div>
             ))
           )}

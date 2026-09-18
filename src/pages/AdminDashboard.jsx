@@ -293,6 +293,7 @@ export default function AdminDashboard() {
     { label: '⭐ PASAR (AKTIF - PAKAI INI)', path: '/admin/pasar-v2' },
     { label: '📅 Event', path: 'EVENT_PANEL' },
     { label: '💼 Lowongan', path: '/admin/lowongan' },
+    { label: '🤖 Pos Cak AI', path: '/admin/pos-cak-ai' },
     { label: '🎓 Beasiswa', path: '/admin/beasiswa' },
     { label: '🗺️ Wilayah', path: '/admin/wilayah' },
     { label: '🔔 Notifikasi', path: '/admin/notifikasi' },

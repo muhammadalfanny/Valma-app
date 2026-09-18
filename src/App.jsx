@@ -16,6 +16,7 @@ import BeritaDetail from './pages/BeritaDetail'
 import Emergency from './pages/Emergency'
 import AdminLowongan from './pages/AdminLowongan'
 import Lowongan from './pages/Lowongan'
+import LowonganDetail from './pages/LowonganDetail'
 import AdminBeasiswa from './pages/AdminBeasiswa'
 import AdminWilayah from './pages/AdminWilayah'
 import Wilayah from './pages/Wilayah'
@@ -49,6 +50,9 @@ import Merchant from './pages/Merchant'
 import MerchantShop from './pages/MerchantShop'
 import DirektoriMerchant from './pages/DirektoriMerchant'
 import NotFound from './pages/NotFound'
+import PosCakAI from './pages/PosCakAI'
+import CakAI from './pages/CakAI'
+import AdminPosCakAI from './pages/AdminPosCakAI'
 
 function App() {
   const navigate = useNavigate()
@@ -112,7 +116,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/report" element={<ReportForm />} />
+      <Route path="/report" element={<ProtectedRoute><ReportForm /></ProtectedRoute>} />
       <Route
         path="/profile"
         element={
@@ -141,28 +145,28 @@ function App() {
         path="/emergency"
         element={<Emergency />}
       />
-          <Route path="/event" element={<Event />} />
-      <Route path="/donasi" element={<Donasi />} />
-      <Route path="/donasi/:id" element={<DonasiDetail />} />
-      <Route path="/donasi/:id/form" element={<DonasiForm />} />
-      <Route path="/donasi/:id/pembayaran" element={<DonasiPembayaran />} />
-      <Route path="/qris-surabaya-24-jam" element={<QRISSurabaya24Jam />} />
+          <Route path="/event" element={<ProtectedRoute><Event /></ProtectedRoute>} />
+      <Route path="/donasi" element={<ProtectedRoute><Donasi /></ProtectedRoute>} />
+      <Route path="/donasi/:id" element={<ProtectedRoute><DonasiDetail /></ProtectedRoute>} />
+      <Route path="/donasi/:id/form" element={<ProtectedRoute><DonasiForm /></ProtectedRoute>} />
+      <Route path="/donasi/:id/pembayaran" element={<ProtectedRoute><DonasiPembayaran /></ProtectedRoute>} />
+      <Route path="/qris-surabaya-24-jam" element={<ProtectedRoute><QRISSurabaya24Jam /></ProtectedRoute>} />
       <Route path="/merchant" element={<ProtectedRoute><Merchant /></ProtectedRoute>} />
-      <Route path="/merchant/:id" element={<MerchantShop />} />
-      <Route path="/direktori-merchant" element={<DirektoriMerchant />} />
-      <Route path="/wilayah" element={<Wilayah />} />
-      <Route path="/notifikasi" element={<NotifikasiWilayah />} />
-      <Route path="/umkm" element={<UMKM />} />
-      <Route path="/forum" element={<Forum />} />
-      <Route path="/beasiswa" element={<Beasiswa />} />
-      <Route path="/layanan" element={<Layanan />} />
+      <Route path="/merchant/:id" element={<ProtectedRoute><MerchantShop /></ProtectedRoute>} />
+      <Route path="/direktori-merchant" element={<ProtectedRoute><DirektoriMerchant /></ProtectedRoute>} />
+      <Route path="/wilayah" element={<ProtectedRoute><Wilayah /></ProtectedRoute>} />
+      <Route path="/notifikasi" element={<ProtectedRoute><NotifikasiWilayah /></ProtectedRoute>} />
+      <Route path="/umkm" element={<ProtectedRoute><UMKM /></ProtectedRoute>} />
+      <Route path="/forum" element={<ProtectedRoute><Forum /></ProtectedRoute>} />
+      <Route path="/beasiswa" element={<ProtectedRoute><Beasiswa /></ProtectedRoute>} />
+      <Route path="/layanan" element={<ProtectedRoute><Layanan /></ProtectedRoute>} />
       <Route path="/admin/peta" element={<ProtectedRoute adminOnly><AdminPeta /></ProtectedRoute>} />
-      <Route path="/peta" element={<Peta />} />
-      <Route path="/pasar" element={<Pasar />} />
+      <Route path="/peta" element={<ProtectedRoute><Peta /></ProtectedRoute>} />
+      <Route path="/pasar" element={<ProtectedRoute><Pasar /></ProtectedRoute>} />
       <Route path="/pasar/toko" element={<ProtectedRoute><PasarToko /></ProtectedRoute>} />
-      <Route path="/pasar/mitra" element={<PasarMitra />} />
+      <Route path="/pasar/mitra" element={<ProtectedRoute><PasarMitra /></ProtectedRoute>} />
       <Route path="/pasar/driver" element={<ProtectedRoute><PasarDriver /></ProtectedRoute>} />
-      <Route path="/polling" element={<Polling />} />
+      <Route path="/polling" element={<ProtectedRoute><Polling /></ProtectedRoute>} />
       <Route path="/admin/polling" element={<ProtectedRoute adminOnly><AdminPolling /></ProtectedRoute>} />
       <Route path="/admin/notifikasi" element={<ProtectedRoute adminOnly><AdminNotifikasiWilayah /></ProtectedRoute>} />
       <Route path="/admin/donasi" element={<ProtectedRoute adminOnly><AdminDonasi /></ProtectedRoute>} />
@@ -179,7 +183,11 @@ function App() {
       <Route path="/admin/wilayah" element={<ProtectedRoute adminOnly><AdminWilayah /></ProtectedRoute>} />
       <Route path="/admin/beasiswa" element={<ProtectedRoute adminOnly><AdminBeasiswa /></ProtectedRoute>} />
       <Route path="/admin/lowongan" element={<ProtectedRoute adminOnly><AdminLowongan /></ProtectedRoute>} />
-      <Route path="/lowongan" element={<Lowongan />} />
+      <Route path="/admin/pos-cak-ai" element={<ProtectedRoute adminOnly><AdminPosCakAI /></ProtectedRoute>} />
+      <Route path="/lowongan" element={<ProtectedRoute><Lowongan /></ProtectedRoute>} />
+            <Route path="/lowongan/:id" element={<LowonganDetail />} />
+      <Route path="/pos-cak-ai" element={<ProtectedRoute><PosCakAI /></ProtectedRoute>} />
+      <Route path="/cak-ai" element={<ProtectedRoute><CakAI /></ProtectedRoute>} />
       <Route
         path="/admin/berita"
         element={

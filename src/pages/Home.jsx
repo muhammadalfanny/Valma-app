@@ -26,6 +26,7 @@ const fiturUtama = [
   { to: "/event", label: "Event", desc: "Kegiatan di kotamu", icon: " 🎪", color: "brand" },
   { to: "/pasar", label: "Pasar", desc: "Jual beli warga Surabaya", icon: "🛒", color: "brand" },
   { to: "/lowongan", label: "Loker", desc: "Info lowongan kerja", icon: "💼", color: "brand" },
+  { to: "/cak-ai", label: "Cak AI", desc: "Asisten cerdas warga", icon: "🤖", color: "brand" },
 ];
 
 const fiturLainnya = [

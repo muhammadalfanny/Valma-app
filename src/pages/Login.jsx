@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 
 export default function Login() {
@@ -9,6 +9,7 @@ export default function Login() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,7 +24,13 @@ export default function Login() {
     if (profilError) console.warn("Profil belum dapat dibaca:", profilError.message);
     setLoading(false);
     setPesan("Login berhasil. Mengarahkan…");
-    navigate(profil?.role === "admin" || profil?.role === "developer" ? "/admin" : "/");
+
+    const redirectTo = location.state?.redirectTo;
+    if (redirectTo) {
+      navigate(redirectTo);
+    } else {
+      navigate(profil?.role === "admin" || profil?.role === "developer" ? "/admin" : "/");
+    }
   };
 
   return (

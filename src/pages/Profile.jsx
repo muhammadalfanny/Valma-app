@@ -33,6 +33,7 @@ export default function Profile() {
   const [namaBaru, setNamaBaru] = useState('')
   const [simpanNamaLoading, setSimpanNamaLoading] = useState(false)
   const [errorNama, setErrorNama] = useState('')
+  const [hapusAudioLoadingId, setHapusAudioLoadingId] = useState(null)
 
   useEffect(() => {
     if (user) {
@@ -198,6 +199,36 @@ export default function Profile() {
   const handleLogout = async () => {
     await supabase.auth.signOut()
     navigate('/')
+  }
+
+  // Hapus/tarik voice note milik sendiri dari laporan (hapus file di Storage + kosongkan audio_url)
+  const handleHapusAudio = async (reportId, audioUrl) => {
+    if (!window.confirm('Hapus rekaman suara dari laporan ini?')) return
+
+    setHapusAudioLoadingId(reportId)
+
+    try {
+      const bagianPath = audioUrl.split('/suara-laporan/')[1]
+      if (bagianPath) {
+        await supabase.storage.from('suara-laporan').remove([bagianPath])
+      }
+
+      const { error } = await supabase
+        .from('reports')
+        .update({ audio_url: null })
+        .eq('id', reportId)
+
+      if (error) throw error
+
+      setMyReports((prev) =>
+        prev.map((rep) => (rep.id === reportId ? { ...rep, audio_url: null } : rep))
+      )
+    } catch (err) {
+      console.error(err)
+      alert('Gagal menghapus rekaman suara: ' + err.message)
+    } finally {
+      setHapusAudioLoadingId(null)
+    }
   }
 
   return (
@@ -450,6 +481,20 @@ export default function Profile() {
                   </div>
                   <h4 className="font-bold text-gray-800 text-sm mb-1">{rep.judul}</h4>
                   <p className="text-xs text-gray-600 mb-2 line-clamp-2">{rep.deskripsi}</p>
+
+                  {rep.audio_url && (
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-2 mb-2">
+                      <audio src={rep.audio_url} controls className="w-full" />
+                      <button
+                        onClick={() => handleHapusAudio(rep.id, rep.audio_url)}
+                        disabled={hapusAudioLoadingId === rep.id}
+                        className="mt-1.5 text-[10px] font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded disabled:opacity-50"
+                      >
+                        {hapusAudioLoadingId === rep.id ? 'Menghapus...' : '🗑️ Hapus Rekaman Suara'}
+                      </button>
+                    </div>
+                  )}
+
                   <span className="text-[10px] text-gray-400">
                     Dikirim pada: {new Date(rep.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </span>
