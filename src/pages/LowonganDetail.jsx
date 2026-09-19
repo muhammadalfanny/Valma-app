@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
+import { useAuth } from '../context/AuthContext'
 
 export default function LowonganDetail() {
   const { id } = useParams()
+const { user } = useAuth()
+  const navigate = useNavigate()
   const [item, setItem] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -88,7 +91,7 @@ export default function LowonganDetail() {
         {item.kontak && (
           <div className="mt-5">
             <h2 className="font-semibold text-gray-900 mb-1">Cara melamar</h2>
-            {kontakAdalahLink ? (
+            {!user ? (<button onClick={() => navigate('/login', { state: { redirectTo: '/lowongan/' + id } })} className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">Login untuk melamar</button>) : kontakAdalahLink ? (
               <a
                 href={item.kontak}
                 target="_blank"

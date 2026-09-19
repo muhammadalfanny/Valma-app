@@ -199,6 +199,7 @@ export default function Lowongan() {
                     href={item.kontak}
                     target="_blank"
                     rel="noreferrer"
+onClick={(e) => { if (user) return; e.preventDefault(); navigate('/login', { state: { redirectTo: '/lowongan' } }) }}
                     className="block text-center bg-brand-600 text-white py-2.5 rounded-xl text-xs font-bold mt-4"
                   >
                     Lihat / Lamar
