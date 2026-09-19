@@ -36,10 +36,12 @@ function Register() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold text-brand-600 mb-4">Daftar Akun</h1>
+      <h1 className="text-2xl font-bold text-brand-600 mb-4">Daftar Akun Surabaya 24 Jam</h1>
+<p className="text-sm text-gray-600 mb-4">Akun ini hanya untuk aplikasi Surabaya 24 Jam. Kami tidak pernah meminta password akun lain.</p>
       <form onSubmit={handleDaftar} className="flex flex-col gap-3">
         <input
           type="text"
+autoComplete="name"
           placeholder="Nama"
           value={nama}
           onChange={(e) => setNama(e.target.value)}
@@ -48,6 +50,7 @@ function Register() {
         />
         <input
           type="email"
+autoComplete="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -56,6 +59,7 @@ function Register() {
         />
         <input
           type="password"
+autoComplete="new-password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
