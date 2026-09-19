@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Capacitor } from "@capacitor/core";
 import BottomNav from "../components/BottomNav";
+import AppLogo from "../components/AppLogo";
 
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -119,7 +120,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-sm text-gray-400">Memuat...</p>
+        <AppLogo size={80} />
       </div>
     );
   }

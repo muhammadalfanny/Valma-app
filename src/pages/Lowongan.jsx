@@ -53,7 +53,7 @@ export default function Lowongan() {
 
   const openForm = () => {
     if (!user) {
-      navigate('/login')
+      navigate('/login', { state: { redirectTo: '/lowongan' } })
       return
     }
     setShowForm((v) => !v)

@@ -184,7 +184,7 @@ function App() {
       <Route path="/admin/beasiswa" element={<ProtectedRoute adminOnly><AdminBeasiswa /></ProtectedRoute>} />
       <Route path="/admin/lowongan" element={<ProtectedRoute adminOnly><AdminLowongan /></ProtectedRoute>} />
       <Route path="/admin/pos-cak-ai" element={<ProtectedRoute adminOnly><AdminPosCakAI /></ProtectedRoute>} />
-      <Route path="/lowongan" element={<ProtectedRoute><Lowongan /></ProtectedRoute>} />
+      <Route path="/lowongan" element={<Lowongan />} />
             <Route path="/lowongan/:id" element={<LowonganDetail />} />
       <Route path="/pos-cak-ai" element={<ProtectedRoute><PosCakAI /></ProtectedRoute>} />
       <Route path="/cak-ai" element={<ProtectedRoute><CakAI /></ProtectedRoute>} />
